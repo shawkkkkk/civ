@@ -153,6 +153,7 @@ export default function CivApp() {
   }, [market]);
 
   const distributed = market?.rewards?.distributedTokens ?? 0;
+  const rewardSymbol = market?.token?.quote?.symbol || "GOLD";
   const selectedCard = getCard(selected);
 
   return (
