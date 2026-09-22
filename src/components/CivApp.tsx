@@ -128,7 +128,7 @@ export default function CivApp() {
 
   async function buy(item: (typeof shop)[number]) {
     if (item.kind === "cosmetic" && profile.cosmetics.includes(item.id)) return setToast("Already unlocked.");
-    if (gold + 1e-9 < item.price) return setToast("Not enough GOLD yet — keep playing; GOLD is optional.");
+    if (gold + 1e-9 < item.price) return setToast(`Not enough ${rewardSymbol} yet — keep playing; the reward asset is optional.`);
     try {
       const live = Boolean(wallet && process.env.NEXT_PUBLIC_GOLD_MINT && process.env.NEXT_PUBLIC_GAME_TREASURY);
       if (live) {
@@ -137,7 +137,7 @@ export default function CivApp() {
       } else setGold((g) => Math.max(0, g - item.price));
       if (item.kind === "influence") setProfile((p) => ({ ...p, influence: p.influence + 10 }));
       else setProfile((p) => ({ ...p, cosmetics: [...p.cosmetics, item.id] }));
-      setToast(live ? "GOLD confirmed onchain." : "Mock GOLD spent. Configure mints to go live.");
+      setToast(live ? `${rewardSymbol} confirmed onchain.` : `Mock ${rewardSymbol} spent. Configure mints to go live.`);
     } catch (e) { setToast(e instanceof Error ? e.message : "Transaction failed."); }
   }
 
@@ -221,13 +221,13 @@ export default function CivApp() {
       </section>
 
       <section className="section economy" id="economy">
-        <div className="sectionHead"><div><div className="eyebrow">ONCHAIN UTILITY, NOT PAY-TO-WIN</div><h2>USE YOUR GOLD</h2></div><div className="goldBalance"><small>YOUR {rewardSymbol}</small><strong>{gold.toFixed(4)}</strong></div></div>
+        <div className="sectionHead"><div><div className="eyebrow">ONCHAIN UTILITY, NOT PAY-TO-WIN</div><h2>USE YOUR {rewardSymbol}</h2></div><div className="goldBalance"><small>YOUR {rewardSymbol}</small><strong>{gold.toFixed(4)}</strong></div></div>
         <div className="economyGrid">
           <div className="explainCard"><h3>Two economies. One fair game.</h3><p><b>Coins + XP</b> come from playing and drive normal progression. <b>GOLD</b> comes from the StonkFun reward pair and unlocks cosmetics, identity, world projects and special access. A larger wallet does not make your Legion hit harder.</p><div className="flow"><span>HOLD / TRADE CIV</span><i>→</i><span>RECEIVE GOLD</span><i>→</i><span>SHAPE CIV</span></div></div>
           <div className="shopGrid">
             {shop.map((item) => {
               const owned = item.kind === "cosmetic" && profile.cosmetics.includes(item.id);
-              return <button className="shopItem" key={item.id} onClick={() => buy(item)} disabled={owned}><div><span>{item.kind === "influence" ? "◈" : "✦"}</span><b>{item.name}</b></div><p>{item.description}</p><footer><strong>{owned ? "OWNED" : `${item.price} GOLD`}</strong><span>{item.kind === "influence" ? `Influence ${profile.influence}` : "Permanent"}</span></footer></button>;
+              return <button className="shopItem" key={item.id} onClick={() => buy(item)} disabled={owned}><div><span>{item.kind === "influence" ? "◈" : "✦"}</span><b>{item.name}</b></div><p>{item.description}</p><footer><strong>{owned ? "OWNED" : `${item.price} ${rewardSymbol}`}</strong><span>{item.kind === "influence" ? `Influence ${profile.influence}` : "Permanent"}</span></footer></button>;
             })}
           </div>
         </div>
