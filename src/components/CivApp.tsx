@@ -180,7 +180,7 @@ export default function CivApp() {
           <div className="metricGrid">
             <div><small>CIV MARKET CAP</small><b>${money(market?.token?.marketCapUsd ?? 184200)}</b></div>
             <div><small>24H VOLUME</small><b>${money(market?.token?.volume24hUsd ?? 48200)}</b></div>
-            <div><small>GOLD DISTRIBUTED</small><b>{money(distributed || 1284.42)}</b></div>
+            <div><small>{rewardSymbol} DISTRIBUTED</small><b>{money(distributed || 1284.42)}</b></div>
             <div><small>HOLDERS REWARDED</small><b>{money(market?.rewards?.holderCount ?? 214)}</b></div>
           </div>
           <div className="sourceBadge">{market?.source === "stonkfun" ? "LIVE · STONKFUN" : "DEMO DATA · READY FOR MINT"}</div>
@@ -220,7 +220,7 @@ export default function CivApp() {
       </section>
 
       <section className="section economy" id="economy">
-        <div className="sectionHead"><div><div className="eyebrow">ONCHAIN UTILITY, NOT PAY-TO-WIN</div><h2>USE YOUR GOLD</h2></div><div className="goldBalance"><small>YOUR GOLD</small><strong>{gold.toFixed(4)}</strong></div></div>
+        <div className="sectionHead"><div><div className="eyebrow">ONCHAIN UTILITY, NOT PAY-TO-WIN</div><h2>USE YOUR GOLD</h2></div><div className="goldBalance"><small>YOUR {rewardSymbol}</small><strong>{gold.toFixed(4)}</strong></div></div>
         <div className="economyGrid">
           <div className="explainCard"><h3>Two economies. One fair game.</h3><p><b>Coins + XP</b> come from playing and drive normal progression. <b>GOLD</b> comes from the StonkFun reward pair and unlocks cosmetics, identity, world projects and special access. A larger wallet does not make your Legion hit harder.</p><div className="flow"><span>HOLD / TRADE CIV</span><i>→</i><span>RECEIVE GOLD</span><i>→</i><span>SHAPE CIV</span></div></div>
           <div className="shopGrid">
