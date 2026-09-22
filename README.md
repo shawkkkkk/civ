@@ -22,6 +22,8 @@ CIV is a real-time browser strategy game designed around StonkFun reward-mode la
 **GOLD:** received through the StonkFun reward pair. Used for cosmetics, world influence and other non-pay-to-win utility.  
 **CIV:** the launch token whose market state can drive world-era presentation and community events.
 
+The core rule is simple: **GOLD never buys raw ranked combat power.** See [the game design spec](docs/GAME_DESIGN.md).
+
 ## Environment
 
 Copy `.env.example` to `.env.local` and configure the live addresses when the token is launched:
@@ -31,6 +33,7 @@ Copy `.env.example` to `.env.local` and configure the live addresses when the to
 - `NEXT_PUBLIC_GOLD_DECIMALS` — reward asset decimals.
 - `NEXT_PUBLIC_GAME_TREASURY` — wallet receiving GOLD used for game utility.
 - `NEXT_PUBLIC_SOLANA_RPC_URL` — dedicated Solana mainnet RPC recommended for production.
+- `NEXT_PUBLIC_SITE_URL` — deployed canonical site origin, used by the sitemap.
 - `STONKFUN_API_BASE` — defaults to `https://www.stonkfun.xyz/api/public/v1`.
 
 If mint/treasury variables are empty the site runs in safe demo mode and never asks a wallet to send funds.
@@ -50,10 +53,20 @@ npm test
 npm run build
 ```
 
-## Production checklist
+GitHub Actions runs the same verification on every push and pull request.
 
-Before enabling real GOLD spending: verify the exact quote mint on StonkFun, set a dedicated treasury, use a production Solana RPC, test a minimum-value transfer from a throwaway wallet, and replace local profile persistence with a server-authoritative account/match service before competitive rewards have monetary value.
+## Before real funds
+
+The playable alpha is ready to host in demo/read-only mode. **Do not enable a real GOLD treasury until paid entitlements are server-authoritative.** Browser localStorage is intentionally used only for the alpha.
+
+The full handoff is in:
+
+- [Production cutover](docs/PRODUCTION.md)
+- [Game/economy design](docs/GAME_DESIGN.md)
+- [Security](SECURITY.md)
 
 ## StonkFun integration notes
 
-StonkFun's current public API is keyless and exposes token, pair and reward endpoints under `/api/public/v1`. Reward-mode launches are Token-2022 mints with immutable transfer taxes distributed to holders in the quote token. CIV intentionally consumes only read endpoints; token launch/signing stays on StonkFun so this app never handles creator private keys.
+StonkFun's public API exposes token, pair and reward reads under `/api/public/v1`. Reward-mode launches use Token-2022 transfer taxes to distribute the quote token to holders. CIV consumes only public reads; creator private keys never belong in this app.
+
+The pair itself must be verified as launchable on StonkFun before the CIV launch. Once the canonical CIV and GOLD mint addresses exist, add them through environment variables rather than hard-coding them.
